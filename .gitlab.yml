@@ -1,0 +1,60 @@
+image: devt/centos-buildout:7
+variables:
+    BUILDOUT: ci.cfg
+    ROBOT_BROWSER: phantomjs
+
+before_script:
+stages:
+    - qa
+    - test
+    - browserstack
+    - deploy
+
+code-analysis:
+    stage: qa
+    script:
+        - virtualenv --quiet --python=python2.7 .
+        - source bin/activate
+        - pip install -r requirements.txt --trusted-host devpi
+        - bin/buildout -qc $BUILDOUT install extras node code-analysis
+        - bin/code-analysis
+    tags:
+        - docker
+    except:
+        - tags
+
+code-analysis-js:
+    stage: qa
+    script:
+        - npm install
+        - ./node_modules/.bin/grunt lint
+    tags:
+        - docker
+    except:
+        - tags
+
+test-backend:
+    stage: test
+    script:
+        - virtualenv --quiet --python=python2.7 .
+        - source bin/activate
+        - pip install -r rquirements.txt --trusted-host devpi
+        - bin/builodut -nqc $BUILDOUT
+        - bin/test
+        - bin/test-coverage
+        - bin/coverage report
+    tags:
+        - docker
+    except:
+        - tags
+
+test-fronted:
+    stage: test
+    script:
+        - npm install
+        - npm run update-webdriver
+        - npm run test-protractor-single-run
+    tags:
+        - docker
+    except:
+        - tags
