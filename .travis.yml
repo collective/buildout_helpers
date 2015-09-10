@@ -1,0 +1,21 @@
+language: python
+sudo: false
+cache:
+  pip: true
+python:
+  - 2.7
+before_install:
+install:
+  - pip install -r requirements.txt
+  - buildout -Nc ci.cfg
+script:
+  - bin/code-analysis
+  - bin/test
+  - bin/createcoverage
+after_success:
+  - pip install coveralls
+  - coveralls
+
+notifications:
+  email:
+    - patrick.gerken@zumtobelgroup.com
