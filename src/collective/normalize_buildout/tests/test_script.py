@@ -42,3 +42,22 @@ a=1
 '''
 
         self.assertEqual(expected, output.read())
+
+    def test_regression1(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '\n'.join([
+            '[sources]',
+            '# xxx',
+            '# yyy',
+            'a = git http...',
+        ]))
+        output = StringIO()
+
+        sort(file(cfg), output)
+        output.seek(0)
+
+        expected = '''[sources]
+# xxx
+# yyy
+a = git http...'''
+
+        self.assertEqual(expected, output.read())
