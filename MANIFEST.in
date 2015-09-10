@@ -1,4 +1,7 @@
-graft src/collective
-graft docs/
-include *.cfg *.rst *.in
+exclude .*
 exclude requirements.txt
+graft docs
+graft src/collective
+include *.cfg *.rst *.in
+recursive-exclude src *.pyc
+recursive-exclude src .*un~
