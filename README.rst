@@ -2,9 +2,8 @@
    If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide_addons.html
    This text does not appear on pypi or github. It is a comment.
 
-==============================================================================
 collective.normalize_buildout
-==============================================================================
+=============================
 
 Do you have multiple buildouts and you want an easy way to apply new best practices to each buildout in a simple way, but you cannot, because every buildout file is configured slightly different?
 
