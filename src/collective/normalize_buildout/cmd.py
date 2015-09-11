@@ -10,7 +10,7 @@ import sys
 
 is_section = re.compile(r'^\[(.*)\]')
 is_comment = re.compile(r'^#.*')
-is_option = re.compile(r'^(\S*) *[+-=]')
+is_option = re.compile(r'^(\S+) *[+-=]')
 is_nextline_option = re.compile(r'^    ')
 
 
@@ -150,11 +150,14 @@ def sources_section_handler(options, stream):
     if 'branch' in all_args:
         all_args.remove('branch')
     for option in options:
-        arg_string = ''.join(('{arg}={{entry[arg_{arg}]:{len}}} '
-                              .format(arg=arg, len=longest_args[arg])
-                              if 'arg_{0}'.format(arg) in option
-                              else ' ' * (longest_args[arg] + 2 + len(arg))
-                              for arg in ['branch']))
+        if 'branch' in longest_args:
+            arg_string = ''.join(('{arg}={{entry[arg_{arg}]:{len}}} '
+                                  .format(arg=arg, len=longest_args[arg])
+                                  if 'arg_{0}'.format(arg) in option
+                                  else ' ' * (longest_args[arg] + 2 + len(arg))
+                                  for arg in ['branch']))
+        else:
+            arg_string = ''
         arg_string += ''.join(('{arg}={{entry[arg_{arg}]}} '
                                .format(arg=arg)
                                if 'arg_{0}'.format(arg) in option
@@ -165,7 +168,7 @@ def sources_section_handler(options, stream):
                                  longest_name=longest_name,
                                  longest_repo_type=longest_repo_type,
                                  longest_url=longest_url,
-                                 comments='\n'.join(option['comments'])))
+                                 comments=''.join(option['comments'])))
         stream.write(format_string.format(entry=option).strip() + '\n')
 
 
@@ -185,12 +188,11 @@ def stream_sorted_sections(sections, stream):
     for section_key in section_keys:
         section = sections[section_key]
         if section_key != 'BEFORE_BUILDOUT':
+            if section_key != section_keys[1]:
+                stream.write('\n')
             stream.write('[{0}]\n'.format(section_key))
         stream.write(''.join(section['comments']))
         section_handlers[section_key](section['options'], stream)
-        if (section_key != section_keys[-1]
-                and section_key != 'BEFORE_BUILDOUT'):
-            stream.write('\n')
 
 
 def sort(instream, outstream):
