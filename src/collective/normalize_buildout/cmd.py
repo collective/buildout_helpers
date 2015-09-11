@@ -150,11 +150,14 @@ def sources_section_handler(options, stream):
     if 'branch' in all_args:
         all_args.remove('branch')
     for option in options:
-        arg_string = ''.join(('{arg}={{entry[arg_{arg}]:{len}}} '
-                              .format(arg=arg, len=longest_args[arg])
-                              if 'arg_{0}'.format(arg) in option
-                              else ' ' * (longest_args[arg] + 2 + len(arg))
-                              for arg in ['branch']))
+        if 'branch' in longest_args:
+            arg_string = ''.join(('{arg}={{entry[arg_{arg}]:{len}}} '
+                                  .format(arg=arg, len=longest_args[arg])
+                                  if 'arg_{0}'.format(arg) in option
+                                  else ' ' * (longest_args[arg] + 2 + len(arg))
+                                  for arg in ['branch']))
+        else:
+            arg_string = ''
         arg_string += ''.join(('{arg}={{entry[arg_{arg}]}} '
                                .format(arg=arg)
                                if 'arg_{0}'.format(arg) in option
