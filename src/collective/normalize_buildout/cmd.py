@@ -15,6 +15,7 @@ is_nextline_option = re.compile(r'^    ')
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig()
 
 
 def parse(stream):
@@ -209,10 +210,18 @@ def cmd():
         action="store_true",
         default=False,
         help="Do not modify buildout file, only return if file would be modified")  # NOQA
-    parser.add_argument("configfile")
+    parser.add_argument("configfile",
+                        help='The configfile to normalize in place, or "-" to read the config file from stdin and return the result to stdout')
     args = parser.parse_args()
 
-    instream = open(args.configfile)
+    if args.configfile == '-':
+        instream = StringIO()
+        instream.write(sys.stdin.read())
+        instream.seek(0)
+        pipe = True
+    else:
+        instream = open(args.configfile)
+        pipe = False
     outstream = StringIO()
     try:
         sort(instream, outstream)
@@ -223,15 +232,20 @@ def cmd():
         instream.seek(0)
         outstream.seek(0)
         changed = instream.read() != outstream.read()
+        outstream.seek(0)
         if not changed:
+            if pipe:
+                sys.stdout.write(outstream.read())
             sys.exit(0)
         else:
             if args.check:
                 print("File is not normalized")
                 sys.exit(1)
             else:
-                outstream.seek(0)
-                file(args.configfile, 'w').write(outstream.read())
+                if pipe:
+                    sys.stdout.write(outstream.read())
+                else:
+                    file(args.configfile, 'w').write(outstream.read())
 
 
 if __name__ == '__main__':
