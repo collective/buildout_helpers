@@ -168,7 +168,7 @@ def sources_section_handler(options, stream):
                                  longest_name=longest_name,
                                  longest_repo_type=longest_repo_type,
                                  longest_url=longest_url,
-                                 comments='\n'.join(option['comments'])))
+                                 comments=''.join(option['comments'])))
         stream.write(format_string.format(entry=option).strip() + '\n')
 
 
@@ -188,12 +188,11 @@ def stream_sorted_sections(sections, stream):
     for section_key in section_keys:
         section = sections[section_key]
         if section_key != 'BEFORE_BUILDOUT':
+            if section_key != section_keys[1]:
+                stream.write('\n')
             stream.write('[{0}]\n'.format(section_key))
         stream.write(''.join(section['comments']))
         section_handlers[section_key](section['options'], stream)
-        if (section_key != section_keys[-1]
-                and section_key != 'BEFORE_BUILDOUT'):
-            stream.write('\n')
 
 
 def sort(instream, outstream):

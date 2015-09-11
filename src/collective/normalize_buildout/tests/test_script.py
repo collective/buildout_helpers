@@ -58,7 +58,8 @@ a=1
         expected = '''[sources]
 # xxx
 # yyy
-a = git http...'''
+a = git http...
+'''
 
         self.assertEqual(expected, output.read())
 
