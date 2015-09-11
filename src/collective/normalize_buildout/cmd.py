@@ -209,9 +209,12 @@ def cmd():
         dest="check",
         action="store_true",
         default=False,
-        help="Do not modify buildout file, only return if file would be modified")  # NOQA
+        help=("Do not modify buildout file, "
+              "only return if file would be modified"))
     parser.add_argument("configfile",
-                        help='The configfile to normalize in place, or "-" to read the config file from stdin and return the result to stdout')
+                        help=('The configfile to normalize in place, '
+                              'or "-" to read the config file from stdin '
+                              'and return the result to stdout'))
     args = parser.parse_args()
 
     if args.configfile == '-':
