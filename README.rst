@@ -52,6 +52,28 @@ Buildout::
 
 and then running "bin/buildout"
 
+Usage
+-----
+
+You can do three things with this command.
+
+1. Check if a config file is normalized (for CI)::
+
+   $ normalize_buildout -c buildout.cfg
+
+   This will either return nothing, or a warning that the buildout is not normalized. It will have a falsy return code for CI.
+
+2. Normalize a config file in place::
+
+   $ normalize_buildout buildout.cfg
+
+   This will normalize the buildout file.
+
+3. Read a config file from stdin and print it on stdout, useful in vim::
+
+   :%!normalize_buildout -
+
+   On failure, this command will print out the config file unmodified.
 
 Contribute
 ----------
