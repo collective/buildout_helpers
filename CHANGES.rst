@@ -5,6 +5,9 @@ Changelog
 0.1.1 (unreleased)
 ------------------
 
+- Support piping.
+  [do3cc]
+
 - Remove unneeded dependency.
   [do3cc]
 
