@@ -20,7 +20,7 @@ long_description = (
 
 setup(
     name='collective.normalize_buildout',
-    version='0.1.1.dev0',
+    version='0.2.0',
     description="A buildout config file normalizer",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers
