@@ -11,7 +11,7 @@ import sys
 is_section = re.compile(r'^\[(.*)\]')
 is_comment = re.compile(r'^#.*')
 is_option = re.compile(r'^(\S+) *[+-=]')
-is_nextline_option = re.compile(r'^    ')
+is_nextline_option = re.compile(r'^ +')
 
 
 logger = logging.getLogger(__name__)

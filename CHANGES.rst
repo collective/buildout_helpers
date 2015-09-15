@@ -5,7 +5,9 @@ Changelog
 0.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Multiline options do not need an indent of 4 spaces, one is enough.
+  Now this script correctly identifies them
+  [do3cc]
 
 
 0.2.0 (2015-09-11)
