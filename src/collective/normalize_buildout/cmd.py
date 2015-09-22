@@ -25,6 +25,8 @@ def parse(stream):
     next_comment = []
     current_option = None
     for line in stream:
+        if line[-1] != '\n':
+            line += '\n'
         if state == 'OPTION/SECTION':
             if is_section.match(line):
                 new_section_name = is_section.findall(line)[0]
@@ -118,6 +120,42 @@ def stream_sorted_options(options, stream):
         option_handlers[option['name']](option, stream)
 
 
+def buildout_section_handler(options, stream):
+    def remove_option(name):
+        options_to_remove = filter(lambda option: option['name'] == name,
+                                   options)
+        if options_to_remove:
+            options.remove(options_to_remove[0])
+            return options_to_remove[0]
+        return None
+    first_option = remove_option('recipe')
+
+    options.sort(key=lambda option: option['lines'][0])
+    mrdeveloper_keys = ('sources',
+                        'sources-dir',
+                        'auto-checkout',
+                        'always-checkout',
+                        'update-git-submodules',
+                        'always-accept-server-certificate',
+                        'mr.developer-threads',
+                        'git-clone-depth')
+    mrdeveloper_options = [option for option in options
+                           if option['name'] in mrdeveloper_keys]
+    options = [option for option in options
+               if option['name'] not in mrdeveloper_keys]
+
+    for option in [first_option] + options:
+        if not option:
+            continue
+        option_handlers[option['name']](option, stream)
+
+    if mrdeveloper_options:
+        stream.write('\n')
+
+    for option in mrdeveloper_options:
+        option_handlers[option['name']](option, stream)
+
+
 def sources_section_handler(options, stream):
     options.sort(key=lambda x: x['lines'][0])
     longest_name = 0
@@ -174,6 +212,7 @@ def sources_section_handler(options, stream):
 
 
 section_handlers = defaultdict(lambda: stream_sorted_options)
+section_handlers['buildout'] = buildout_section_handler
 section_handlers['sources'] = sources_section_handler
 
 
