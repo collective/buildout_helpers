@@ -71,7 +71,6 @@ a=1
 
         self.assertEqual(expected, output.read())
 
-
     def test_regression1(self):
         cfg = self.given_a_file_in_test_dir('buildout.cfg', '\n'.join([
             '[sources]',
