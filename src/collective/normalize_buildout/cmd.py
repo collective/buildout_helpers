@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from argparse import ArgumentParser
 from collections import defaultdict
-from StringIO import StringIO
+from io import StringIO
 
 import fileinput
 import logging
@@ -293,3 +293,4 @@ def cmd():
 
 if __name__ == '__main__':
     sys.exit(sort(fileinput.input()))
+
