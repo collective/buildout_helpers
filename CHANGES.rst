@@ -2,7 +2,13 @@ Changelog
 =========
 
 
-0.2.1 (unreleased)
+0.3.1 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
+0.3.0 (2015-09-22)
 ------------------
 
 - Mr.developer variables in buildout sections are now separated
