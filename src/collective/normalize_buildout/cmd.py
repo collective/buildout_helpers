@@ -168,14 +168,14 @@ def sources_section_handler(options, stream):
     longest_args = {}
     all_args = set()
     for option in options:
-        name, rest = map(unicode.strip, option['lines'][0].split('=', 1))
+        name, rest = [x.strip() for x in option['lines'][0].split('=', 1)]
         try:
-            repo_type, url, rest = map(unicode.strip, rest.split(' ', 2))
+            repo_type, url, rest = [x.strip() for x in rest.split(' ', 2)]
         except ValueError:
-            repo_type, url = map(unicode.strip, rest.split(' ', 1))
+            repo_type, url = [x.strip() for x in rest.split(' ', 1)]
             rest = ''
         args = dict((arg.split('=') for arg in
-                     map(unicode.strip, rest.split(' ')) if arg))
+                     [x.strip() for x in rest.split(' ')] if arg))
         longest_name = max(longest_name, len(name))
         longest_repo_type = max(longest_repo_type, len(repo_type))
         longest_url = max(longest_url, len(url))
@@ -291,7 +291,8 @@ def cmd():
                 if pipe:
                     sys.stdout.write(outstream.read())
                 else:
-                    file(args.configfile, 'w').write(outstream.read())
+                    open(args.configfile, 'w',
+                         encoding='utf-8').write(outstream.read())
 
 
 if __name__ == '__main__':
