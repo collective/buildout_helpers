@@ -20,10 +20,11 @@ It has a command line option for not changing the file and only reporting via ex
 The script understands the special meaning of some sections and keys:
 
   - buildout section is always the first
-  - versions section is always the last
+  - versions, and sources section are always the last
   - recipe key is always first
   - eggs, and zcml values get sorted.
   - keys of sources entries get sorted, values get indented so that branch settings are all on the same column.
+  - mr.developer options are grouped and separated from the other buildout options
 
 Comments above sections and above keys get shuffled together with key or section.
 You can document why you need to pin a specific version of a package and after normalization, the comment is still above the right version specifier.
