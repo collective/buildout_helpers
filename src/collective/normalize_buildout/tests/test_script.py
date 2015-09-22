@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from StringIO import StringIO
 from collective.normalize_buildout.cmd import sort
 from collective.normalize_buildout.testing import BaseTestCase
+from StringIO import StringIO
 
 
 class TestScript(BaseTestCase):
