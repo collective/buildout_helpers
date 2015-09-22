@@ -5,6 +5,9 @@ Changelog
 0.2.1 (unreleased)
 ------------------
 
+- Sources sections are at the end now
+  [do3cc]
+
 - Multiline options do not need an indent of 4 spaces, one is enough.
   Now this script correctly identifies them
   [do3cc]
