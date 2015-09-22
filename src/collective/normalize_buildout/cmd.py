@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import unicode_literals
 from argparse import ArgumentParser
 from collections import defaultdict
+from io import open
 from io import StringIO
 
 import fileinput
@@ -165,14 +168,14 @@ def sources_section_handler(options, stream):
     longest_args = {}
     all_args = set()
     for option in options:
-        name, rest = map(str.strip, option['lines'][0].split('=', 1))
+        name, rest = map(unicode.strip, option['lines'][0].split('=', 1))
         try:
-            repo_type, url, rest = map(str.strip, rest.split(' ', 2))
+            repo_type, url, rest = map(unicode.strip, rest.split(' ', 2))
         except ValueError:
-            repo_type, url = map(str.strip, rest.split(' ', 1))
+            repo_type, url = map(unicode.strip, rest.split(' ', 1))
             rest = ''
         args = dict((arg.split('=') for arg in
-                     map(str.strip, rest.split(' ')) if arg))
+                     map(unicode.strip, rest.split(' ')) if arg))
         longest_name = max(longest_name, len(name))
         longest_repo_type = max(longest_repo_type, len(repo_type))
         longest_url = max(longest_url, len(url))
@@ -263,7 +266,7 @@ def cmd():
         instream.seek(0)
         pipe = True
     else:
-        instream = open(args.configfile)
+        instream = open(args.configfile, encoding='utf-8')
         pipe = False
     outstream = StringIO()
     try:
@@ -293,4 +296,3 @@ def cmd():
 
 if __name__ == '__main__':
     sys.exit(sort(fileinput.input()))
-

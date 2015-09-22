@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import unicode_literals
 from collective.normalize_buildout.cmd import sort
 from collective.normalize_buildout.testing import BaseTestCase
+from io import open
 from io import StringIO
 
 
@@ -22,7 +25,7 @@ yyy = git xfdsfdsfsdfsdfdsfdsfsdfdsfsdfdsf branch=yyy
 ''')
         output = StringIO()
 
-        sort(file(cfg), output)
+        sort(open(cfg), output)
         output.seek(0)
 
         expected = '''[buildout]
@@ -52,7 +55,7 @@ a=1
 [zzz]
 [aaa]''')
         output = StringIO()
-        sort(file(cfg), output)
+        sort(open(cfg), output)
         output.seek(0)
 
         expected = '''\
@@ -79,7 +82,7 @@ bla = 1
 auto-checkout = *''')
         output = StringIO()
 
-        sort(file(cfg), output)
+        sort(open(cfg), output)
         output.seek(0)
 
         expected = '''[buildout]
@@ -99,7 +102,7 @@ sources = sources
 a = git http...''')
         output = StringIO()
 
-        sort(file(cfg), output)
+        sort(open(cfg), output)
         output.seek(0)
 
         expected = '''[sources]
@@ -118,7 +121,7 @@ extra-field-types =
 ''')  # NOQA
         output = StringIO()
 
-        sort(file(cfg), output)
+        sort(open(cfg), output)
         output.seek(0)
 
         expected = '''\
@@ -137,7 +140,7 @@ extra-field-types =
 ''')  # NOQA
         output = StringIO()
 
-        sort(file(cfg), output)
+        sort(open(cfg), output)
         output.seek(0)
 
         expected = '''\
