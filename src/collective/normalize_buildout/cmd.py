@@ -108,8 +108,8 @@ option_handlers['auto-checkout'] = sorted_option_handler
 
 def stream_sorted_options(options, stream):
     def remove_option(name):
-        options_to_remove = filter(lambda option: option['name'] == name,
-                                   options)
+        options_to_remove = list(filter(lambda option: option['name'] == name,
+                                        options))
         if options_to_remove:
             options.remove(options_to_remove[0])
             return options_to_remove[0]
@@ -126,8 +126,8 @@ def stream_sorted_options(options, stream):
 
 def buildout_section_handler(options, stream):
     def remove_option(name):
-        options_to_remove = filter(lambda option: option['name'] == name,
-                                   options)
+        options_to_remove = list(filter(lambda option: option['name'] == name,
+                                        options))
         if options_to_remove:
             options.remove(options_to_remove[0])
             return options_to_remove[0]
@@ -221,14 +221,15 @@ section_handlers['sources'] = sources_section_handler
 
 
 def stream_sorted_sections(sections, stream):
-    section_keys = sections.keys()
+    section_keys = list(sections.keys())
     for special_key in ['buildout', 'versions', 'BEFORE_BUILDOUT', 'sources']:
         if special_key in section_keys:
             section_keys.remove(special_key)
     section_keys.sort()
-    section_keys = (['BEFORE_BUILDOUT', 'buildout'] + section_keys
-                    + ['sources', 'versions'])
-    section_keys = filter(lambda key: sections.get(key, None), section_keys)
+    section_keys = (['BEFORE_BUILDOUT', 'buildout'] + section_keys +
+                    ['sources', 'versions'])
+    section_keys = list(filter(lambda key: sections.get(key, None),
+                               section_keys))
     for section_key in section_keys:
         section = sections[section_key]
         if section_key != 'BEFORE_BUILDOUT':
