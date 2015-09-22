@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import unicode_literals
 from argparse import ArgumentParser
 from collections import defaultdict
-from StringIO import StringIO
+from io import open
+from io import StringIO
 
 import fileinput
 import logging
@@ -105,8 +108,8 @@ option_handlers['auto-checkout'] = sorted_option_handler
 
 def stream_sorted_options(options, stream):
     def remove_option(name):
-        options_to_remove = filter(lambda option: option['name'] == name,
-                                   options)
+        options_to_remove = list(filter(lambda option: option['name'] == name,
+                                        options))
         if options_to_remove:
             options.remove(options_to_remove[0])
             return options_to_remove[0]
@@ -123,8 +126,8 @@ def stream_sorted_options(options, stream):
 
 def buildout_section_handler(options, stream):
     def remove_option(name):
-        options_to_remove = filter(lambda option: option['name'] == name,
-                                   options)
+        options_to_remove = list(filter(lambda option: option['name'] == name,
+                                        options))
         if options_to_remove:
             options.remove(options_to_remove[0])
             return options_to_remove[0]
@@ -165,14 +168,14 @@ def sources_section_handler(options, stream):
     longest_args = {}
     all_args = set()
     for option in options:
-        name, rest = map(str.strip, option['lines'][0].split('=', 1))
+        name, rest = [x.strip() for x in option['lines'][0].split('=', 1)]
         try:
-            repo_type, url, rest = map(str.strip, rest.split(' ', 2))
+            repo_type, url, rest = [x.strip() for x in rest.split(' ', 2)]
         except ValueError:
-            repo_type, url = map(str.strip, rest.split(' ', 1))
+            repo_type, url = [x.strip() for x in rest.split(' ', 1)]
             rest = ''
         args = dict((arg.split('=') for arg in
-                     map(str.strip, rest.split(' ')) if arg))
+                     [x.strip() for x in rest.split(' ')] if arg))
         longest_name = max(longest_name, len(name))
         longest_repo_type = max(longest_repo_type, len(repo_type))
         longest_url = max(longest_url, len(url))
@@ -218,14 +221,15 @@ section_handlers['sources'] = sources_section_handler
 
 
 def stream_sorted_sections(sections, stream):
-    section_keys = sections.keys()
+    section_keys = list(sections.keys())
     for special_key in ['buildout', 'versions', 'BEFORE_BUILDOUT', 'sources']:
         if special_key in section_keys:
             section_keys.remove(special_key)
     section_keys.sort()
-    section_keys = (['BEFORE_BUILDOUT', 'buildout'] + section_keys
-                    + ['sources', 'versions'])
-    section_keys = filter(lambda key: sections.get(key, None), section_keys)
+    section_keys = (['BEFORE_BUILDOUT', 'buildout'] + section_keys +
+                    ['sources', 'versions'])
+    section_keys = list(filter(lambda key: sections.get(key, None),
+                               section_keys))
     for section_key in section_keys:
         section = sections[section_key]
         if section_key != 'BEFORE_BUILDOUT':
@@ -263,7 +267,7 @@ def cmd():
         instream.seek(0)
         pipe = True
     else:
-        instream = open(args.configfile)
+        instream = open(args.configfile, encoding='utf-8')
         pipe = False
     outstream = StringIO()
     try:
@@ -288,7 +292,8 @@ def cmd():
                 if pipe:
                     sys.stdout.write(outstream.read())
                 else:
-                    file(args.configfile, 'w').write(outstream.read())
+                    open(args.configfile, 'w',
+                         encoding='utf-8').write(outstream.read())
 
 
 if __name__ == '__main__':
