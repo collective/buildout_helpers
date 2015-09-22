@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from StringIO import StringIO
 from argparse import ArgumentParser
 from collections import defaultdict
+from StringIO import StringIO
+
 import fileinput
 import logging
 import re
@@ -51,7 +52,7 @@ def parse(stream):
             elif line == '\n':
                 continue
             else:
-                raise Exception("Did not understand this line: %s",
+                raise Exception('Did not understand this line: %s',
                                 line)
         elif state == 'MULTILINE_OPTION':
             if is_section.match(line):
@@ -76,7 +77,7 @@ def parse(stream):
             elif line == '\n':
                 state = 'OPTION/SECTION'
             else:
-                raise Exception("Did not understand this line: %s",
+                raise Exception('Did not understand this line: %s',
                                 line)
 
     return sections
@@ -243,14 +244,14 @@ def sort(instream, outstream):
 def cmd():
     parser = ArgumentParser()
     parser.add_argument(
-        "-c",
-        "--check",
-        dest="check",
-        action="store_true",
+        '-c',
+        '--check',
+        dest='check',
+        action='store_true',
         default=False,
-        help=("Do not modify buildout file, "
-              "only return if file would be modified"))
-    parser.add_argument("configfile",
+        help=('Do not modify buildout file, '
+              'only return if file would be modified'))
+    parser.add_argument('configfile',
                         help=('The configfile to normalize in place, '
                               'or "-" to read the config file from stdin '
                               'and return the result to stdout'))
@@ -281,7 +282,7 @@ def cmd():
             sys.exit(0)
         else:
             if args.check:
-                print("File is not normalized")
+                logger.error('File is not normalized')
                 sys.exit(1)
             else:
                 if pipe:
