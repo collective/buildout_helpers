@@ -179,12 +179,12 @@ section_handlers['sources'] = sources_section_handler
 
 def stream_sorted_sections(sections, stream):
     section_keys = sections.keys()
-    for special_key in ['buildout', 'versions', 'BEFORE_BUILDOUT']:
+    for special_key in ['buildout', 'versions', 'BEFORE_BUILDOUT', 'sources']:
         if special_key in section_keys:
             section_keys.remove(special_key)
     section_keys.sort()
     section_keys = (['BEFORE_BUILDOUT', 'buildout'] + section_keys
-                    + ['versions'])
+                    + ['sources', 'versions'])
     section_keys = filter(lambda key: sections.get(key, None), section_keys)
     for section_key in section_keys:
         section = sections[section_key]

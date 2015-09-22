@@ -43,6 +43,35 @@ a=1
 
         self.assertEqual(expected, output.read())
 
+    def test_versions_and_sources_last(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
+[buildout]
+[versions]
+[sources]
+[www]
+[zzz]
+[aaa]''')
+        output = StringIO()
+        sort(file(cfg), output)
+        output.seek(0)
+
+        expected = '''\
+[buildout]
+
+[aaa]
+
+[www]
+
+[zzz]
+
+[sources]
+
+[versions]
+'''
+
+        self.assertEqual(expected, output.read())
+
+
     def test_regression1(self):
         cfg = self.given_a_file_in_test_dir('buildout.cfg', '\n'.join([
             '[sources]',
