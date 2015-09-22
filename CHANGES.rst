@@ -5,6 +5,10 @@ Changelog
 0.2.1 (unreleased)
 ------------------
 
+- Mr.developer variables in buildout sections are now separated
+  and at the end of the buildout section
+  [do3cc]
+
 - Sources sections are at the end now
   [do3cc]
 

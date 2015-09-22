@@ -7,19 +7,19 @@ from collective.normalize_buildout.testing import BaseTestCase
 class TestScript(BaseTestCase):
 
     def test_good_case(self):
-        cfg = self.given_a_file_in_test_dir('buildout.cfg', '\n'.join([
-            '[buildout]',
-            '[bla]',
-            'a=1',
-            'recipe=xxx',
-            '# comment',
-            'bla=1',
-            '[versions]',
-            'a=1',
-            '[sources]',
-            'xxx = git http:aaa branch=xxx',
-            'yyy = git xfdsfdsfsdfsdfdsfdsfsdfdsfsdfdsf branch=yyy'
-        ]))
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
+[buildout]
+[bla]
+a=1
+recipe=xxx
+# comment
+bla=1
+[versions]
+a=1
+[sources]
+xxx = git http:aaa branch=xxx
+yyy = git xfdsfdsfsdfsdfdsfdsfsdfdsfsdfdsf branch=yyy
+''')
         output = StringIO()
 
         sort(file(cfg), output)
@@ -71,13 +71,32 @@ a=1
 
         self.assertEqual(expected, output.read())
 
+    def test_mrdev_options_grouped(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
+[buildout]
+sources = sources
+bla = 1
+auto-checkout = *''')
+        output = StringIO()
+
+        sort(file(cfg), output)
+        output.seek(0)
+
+        expected = '''[buildout]
+bla = 1
+
+auto-checkout = *
+sources = sources
+'''
+
+        self.assertEqual(expected, output.read())
+
     def test_regression1(self):
-        cfg = self.given_a_file_in_test_dir('buildout.cfg', '\n'.join([
-            '[sources]',
-            '# xxx',
-            '# yyy',
-            'a = git http...',
-        ]))
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''
+[sources]
+# xxx
+# yyy
+a = git http...''')
         output = StringIO()
 
         sort(file(cfg), output)
@@ -96,17 +115,17 @@ a = git http...
 [filter]
 extra-field-types =
             <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(/)+$" replacement=""/>
-'''.strip())  # NOQA
+''')  # NOQA
         output = StringIO()
 
         sort(file(cfg), output)
         output.seek(0)
 
-        expected = '''
+        expected = '''\
 [filter]
 extra-field-types =
             <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(/)+$" replacement=""/>
-'''.strip()  # NOQA
+'''  # NOQA
 
         self.assertEqual(expected, output.read())
 
@@ -115,16 +134,16 @@ extra-field-types =
 [filter]
 extra-field-types =
  <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(/)+$" replacement=""/>
-'''.strip())  # NOQA
+''')  # NOQA
         output = StringIO()
 
         sort(file(cfg), output)
         output.seek(0)
 
-        expected = '''
+        expected = '''\
 [filter]
 extra-field-types =
  <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(/)+$" replacement=""/>
-'''.strip()  # NOQA
+'''  # NOQA
 
         self.assertEqual(expected, output.read())
