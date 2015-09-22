@@ -81,3 +81,22 @@ extra-field-types =
 '''.strip()  # NOQA
 
         self.assertEqual(expected, output.read())
+
+    def test_regression3(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''
+[filter]
+extra-field-types =
+ <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(/)+$" replacement=""/>
+'''.strip())  # NOQA
+        output = StringIO()
+
+        sort(file(cfg), output)
+        output.seek(0)
+
+        expected = '''
+[filter]
+extra-field-types =
+ <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(/)+$" replacement=""/>
+'''.strip()  # NOQA
+
+        self.assertEqual(expected, output.read())
