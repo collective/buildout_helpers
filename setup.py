@@ -50,6 +50,7 @@ setup(
     },
     entry_points="""
 [console_scripts]
-normalize_buildout = collective.normalize_buildout.cmd:cmd
+normalize_buildout = collective.normalize_buildout.cmd:normalize_cmd
+version_info       = collective.normalize_buildout.cmd:version_info_cmd
     """,
 )
