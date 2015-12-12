@@ -46,6 +46,7 @@ setup(
     ],
     extras_require={
         'test': [
+            'requests_mock'
         ],
     },
     entry_points="""

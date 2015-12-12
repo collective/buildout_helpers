@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
+import requests_mock
 from collective.normalize_buildout.normalize import sort
 from collective.normalize_buildout.testing import BaseTestCase
 from collective.normalize_buildout.version_info import get_version_info
+from collective.normalize_buildout.freeze import freeze
 from io import open
 from io import StringIO
 
@@ -56,6 +58,80 @@ longname = \x1b[31m1 \x1b[39m 0 /wonderland//buildout.cfg
          = \x1b[31m2 \x1b[39m 1 /wonderland//more_versions.cfg
 '''
         self.assertEqual(epxected, output)
+
+
+class TestFreezer(BaseTestCase):
+
+    def test_freezer(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
+[buildout]
+extends= http://example.com/buildout.cfg
+''')
+        expected1 = '''\
+[buildout]
+extends= external_buildouts/example.com_buildout.cfg
+'''
+        expected2 = '''\
+# File managed by freeze command from collective.normalize_buildout
+# Changes will be overwritten
+# ETAG: XXX
+[buildout]'''
+        with requests_mock.mock() as m:
+            m.get('http://example.com/buildout.cfg', text='''[buildout]''',
+                  headers={'Etag': 'XXX'})
+            freeze(cfg)
+
+        new_file_contents = open('external_buildouts/example.com_buildout.cfg',
+                                 'r').read()
+        old_file_contents = open(cfg, 'r').read()
+        self.assertEqual(old_file_contents, expected1)
+        self.assertEqual(new_file_contents, expected2)
+
+    def test_freezer_nested(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
+[buildout]
+extends= http://example.com/buildout.cfg
+''')
+        expected1 = '''\
+[buildout]
+extends= external_buildouts/example.com_buildout.cfg
+'''
+        expected2 = '''\
+# File managed by freeze command from collective.normalize_buildout
+# Changes will be overwritten
+# ETAG: None
+[buildout]
+extends= external_buildouts/example.com_buildout2.cfg
+'''
+        with requests_mock.mock() as m:
+            m.get('http://example.com/buildout.cfg', text='''[buildout]
+extends= http://example.com/buildout2.cfg
+''')
+            m.get('http://example.com/buildout2.cfg', text='''[buildout]''')
+            freeze(cfg)
+
+        abs_dir, _ = os.path.split(cfg)
+        new_file_contents = open(os.path.join(abs_dir,
+                                              'external_buildouts',
+                                              'example.com_buildout.cfg'),
+                                 'r').read()
+        old_file_contents = open(cfg, 'r').read()
+        self.assertEqual(old_file_contents, expected1)
+        self.assertEqual(new_file_contents, expected2)
+
+    def test_freezer_caching(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
+[buildout]
+extends= http://example.com/buildout.cfg
+''')
+        with requests_mock.mock() as m:
+            m.get('http://example.com/buildout.cfg', text='''[buildout]''',
+                  headers={'Etag': 'XXX'})
+            freeze(cfg)
+            freeze(cfg)
+            last_call = m.request_history[-1]
+            self.assertEqual('XXX', last_call._request.headers['etag'])
+
 
 class TestScript(BaseTestCase):
 
