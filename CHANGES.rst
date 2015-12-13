@@ -5,8 +5,17 @@ Changelog
 0.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add freeze command, downloads all external buildout files, with
+  headers that allow the same freeze command to update it.
+  [do3cc]
 
+- Add version info command that show which buildout file pins which
+  version. Inspired from @jensens script
+  [do3cc]
+
+- Rename package to buildout_helpers. Namespace packages cause trobule
+  with pip and buildout
+  [do3cc]
 
 0.3.0 (2015-09-22)
 ------------------

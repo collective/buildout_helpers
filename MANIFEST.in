@@ -1,7 +1,7 @@
 exclude .*
 exclude requirements.txt
 graft docs
-graft src/collective
+graft src/buildout_helpers
 include *.cfg *.rst *.in
 recursive-exclude src *.pyc
 recursive-exclude src .*un~

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Version 0.1
-"""Installer for the collective.normalize_buildout package."""
+"""Installer for the buildout_helpers package."""
 
 from setuptools import find_packages
 from setuptools import setup
@@ -19,7 +19,7 @@ long_description = (
 
 
 setup(
-    name='collective.normalize_buildout',
+    name='buildout_helpers',
     version='0.3.1.dev0',
     description="A buildout config file normalizer",
     long_description=long_description,
@@ -34,15 +34,15 @@ setup(
     keywords='Python Plone',
     author='Patrick Gerken',
     author_email='patrick.gerken@zumtobelgroup.com',
-    url='http://pypi.python.org/pypi/collective.normalize_buildout',
+    url='http://pypi.python.org/pypi/buildout_helpers',
     license='BSD',
     packages=find_packages('src', exclude=['ez_setup']),
-    namespace_packages=['collective'],
     package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'requests',
     ],
     extras_require={
         'test': [
@@ -51,7 +51,8 @@ setup(
     },
     entry_points="""
 [console_scripts]
-normalize_buildout = collective.normalize_buildout.cmd:normalize_cmd
-version_info       = collective.normalize_buildout.cmd:version_info_cmd
+normalize_buildout = buildout_helpers.cmd:normalize_cmd
+version_info       = buildout_helpers.cmd:version_info_cmd
+freeze             = buildout_helpers.cmd:freeze
     """,
 )
