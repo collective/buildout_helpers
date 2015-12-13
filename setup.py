@@ -53,6 +53,6 @@ setup(
 [console_scripts]
 normalize_buildout = buildout_helpers.cmd:normalize_cmd
 version_info       = buildout_helpers.cmd:version_info_cmd
-freeze             = buildout_helpers.cmd:freeze
+freeze             = buildout_helpers.cmd:freeze_cmd
     """,
 )

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from argparse import ArgumentParser
 from buildout_helpers.normalize import sort
 from buildout_helpers.version_info import get_version_info
+from buildout_helpers.freeze import freeze
 from io import open
 from io import StringIO
 
@@ -75,6 +76,19 @@ def version_info_cmd():
 
     args = parser.parse_args()
     sys.stdout.write(get_version_info(args.configfile).read())
+
+
+def freeze_cmd():
+    parser = ArgumentParser(
+        description=('Download external buildout resources.\n'
+                     'On second invocation, download them again, if '
+                     'necessary.')
+    )
+    parser.add_argument('configfile',
+                        help=('The configfile to start freezing from.\n'
+                              'All resources get checked recursively.'))
+    args = parser.parse_args()
+    sys.stdout.write(freeze(args))
 
 if __name__ == '__main__':
     sys.exit(sort(fileinput.input()))

@@ -77,7 +77,8 @@ def get_all_resources(url, cache, ref_url):
     return retval
 
 
-def freeze(url):
+def freeze(args):
+    url = args.configfile
     cache = {}
     base_path, _ = os.path.split(url)
     resources = get_all_resources(url, cache, url)
@@ -86,6 +87,7 @@ def freeze(url):
             freeze_resource(base_path, resource, cache, ref)
         elif was_remote(resource):
             update_resource(base_path, resource, cache, ref)
+    return "Frozen"
 
 
 def freeze_resource(base_path, resource, cache, ref, etag=None):
