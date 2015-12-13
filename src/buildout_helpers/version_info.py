@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
-from collections import defaultdict
 from collections import namedtuple
 from collections import OrderedDict
 from ConfigParser import ConfigParser
@@ -18,7 +17,7 @@ VersionInfo = namedtuple("VersionInfo", ("version", "origin"))
 
 
 def extract_versions_section(url, ref_url=None):
-    versions = OrderedDict(defaultdict(list))
+    versions = OrderedDict()
 
     config = ConfigParser()
     if ref_url:
@@ -42,6 +41,8 @@ def extract_versions_section(url, ref_url=None):
         if extend.strip():
             for pkg, version_info in extract_versions_section(extend.strip(),
                                                               url).items():
+                if pkg not in versions:
+                    versions[pkg] = []
                 versions[pkg].extend(version_info)
     return versions
 
