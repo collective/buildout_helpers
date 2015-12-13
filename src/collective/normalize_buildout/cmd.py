@@ -68,13 +68,13 @@ def normalize_cmd():
 
 def version_info_cmd():
     parser = ArgumentParser(
-        description="Print info about pinned versions and its overrides"
+        description='Print info about pinned versions and its overrides'
     )
     parser.add_argument('configfile',
                         help=('config file to parse'))
 
     args = parser.parse_args()
-    print(get_version_info(args.configfile).read())
+    sys.stdout.write(get_version_info(args.configfile).read())
 
 if __name__ == '__main__':
     sys.exit(sort(fileinput.input()))

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
-from pkg_resources import parse_version
 from collections import defaultdict
 from collections import namedtuple
 from collections import OrderedDict
@@ -9,8 +8,8 @@ from ConfigParser import ConfigParser
 from ConfigParser import NoOptionError
 from ConfigParser import NoSectionError
 from io import StringIO
+from pkg_resources import parse_version
 import colorama
-
 import os.path
 import urllib2
 
