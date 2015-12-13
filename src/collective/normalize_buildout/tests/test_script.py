@@ -75,14 +75,17 @@ extends= external_buildouts/example.com_buildout.cfg
 # File managed by freeze command from collective.normalize_buildout
 # Changes will be overwritten
 # ETAG: XXX
+# ORIGIN: http://example.com/buildout.cfg
 [buildout]'''
         with requests_mock.mock() as m:
             m.get('http://example.com/buildout.cfg', text='''[buildout]''',
                   headers={'Etag': 'XXX'})
             freeze(cfg)
 
-        new_file_contents = open('external_buildouts/example.com_buildout.cfg',
-                                 'r').read()
+        abs_dir, _ = os.path.split(cfg)
+        location = os.path.join(abs_dir,
+                                'external_buildouts/example.com_buildout.cfg')
+        new_file_contents = open(location, 'r').read()
         old_file_contents = open(cfg, 'r').read()
         self.assertEqual(old_file_contents, expected1)
         self.assertEqual(new_file_contents, expected2)
