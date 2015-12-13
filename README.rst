@@ -2,7 +2,7 @@
    If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide_addons.html
    This text does not appear on pypi or github. It is a comment.
 
-collective.normalize_buildout
+buildout_helpers
 =============================
 
 Do you have multiple buildouts and you want an easy way to apply new best practices to each buildout in a simple way, but you cannot, because every buildout file is configured slightly different?
@@ -38,7 +38,7 @@ You can install the package with pip or zc.buildout.
 
 PIP::
 
-    $ pip install collective.normalize_buildout
+    $ pip install buildout_helpers
 
 Buildout::
 
@@ -48,7 +48,7 @@ Buildout::
     [extras]
     recipe = zc.recipe.egg
     eggs =
-        collective.normalize_buildout
+        buildout_helpers
 
 
 and then running "bin/buildout"
@@ -79,5 +79,5 @@ You can do three things with this command.
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/collective/collective.normalize_buildout/issues
-- Source Code: https://github.com/collective/collective.normalize_buildout
+- Issue Tracker: https://github.com/collective/buildout_helpers/issues
+- Source Code: https://github.com/collective/buildout_helpers
