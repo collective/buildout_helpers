@@ -18,6 +18,14 @@ from urlparse import urlparse
 VersionInfo = namedtuple("VersionInfo", ("version", "origin"))
 
 
+MAINTENANCE_PREFIX = '''\
+# File managed by freeze command from collective.normalize_buildout
+# Changes will be overwritten
+# ETAG: {}
+# ORIGIN: {}
+'''
+
+
 def absolutize_url(url, ref_url):
     if ref_url:
         if not (url.startswith('/') or url.startswith('http')):
@@ -71,10 +79,17 @@ def freeze(url):
     for (resource, ref) in resources:
         if is_remote(resource):
             freeze_resource(base_path, resource, cache, ref)
+        elif was_remote(resource):
+            update_resource(base_path, resource, cache, ref)
 
 
 def is_remote(resource):
     return not os.path.isfile(resource)
+
+
+def was_remote(resource):
+    data = open(resource).read().splitlines()
+    return data[0:1] == MAINTENANCE_PREFIX.splitlines()[0:1]
 
 
 def frozen_filename(frozen_folder, url):
@@ -87,7 +102,7 @@ def frozen_filename(frozen_folder, url):
     return abs_target_filename, rel_target_filename
 
 
-def freeze_resource(base_path, resource, cache, ref):
+def freeze_resource(base_path, resource, cache, ref, etag=None):
     frozen_folder = os.path.join(base_path, 'external_buildouts')
     if not os.path.exists(frozen_folder):
         os.makedirs(frozen_folder)
@@ -96,15 +111,14 @@ def freeze_resource(base_path, resource, cache, ref):
     if resource in cache:
         contents = cache[resource]
     else:
-        response = requests.get(resource)
+        headers = {}
+        if etag:
+            headers['If-None-Match'] = etag
+        response = requests.get(resource, headers=headers)
         contents = response.text
         etag = response.headers.get('etag', None)
         contents = get_data_stream(resource).read()
-    prefix = '''\
-# File managed by freeze command from collective.normalize_buildout
-# Changes will be overwritten
-# ETAG: {}
-'''.format(etag)
+    prefix = MAINTENANCE_PREFIX.format(etag, resource)
     open(abs_target_filename, 'w').write(prefix + contents)
     if is_remote(ref):
         # The reference was also remote. Doesn't matter. It is guaranteed that
@@ -112,6 +126,12 @@ def freeze_resource(base_path, resource, cache, ref):
         ref, _ = frozen_filename(frozen_folder, ref)
     new_data = open(ref).read().replace(resource, rel_target_filename)
     open(ref, 'w').write(new_data)
+
+
+def update_resource(base_path, resource, cache, ref):
+    etag, url = map(lambda line: line.split(':', 1)[1].strip(),
+                    open(resource).read().splitlines()[2:4])
+    freeze_resource(base_path, url, cache, ref, etag)
 
 
 def get_all_resources(url, cache, ref_url):

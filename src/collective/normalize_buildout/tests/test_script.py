@@ -100,6 +100,7 @@ extends= external_buildouts/example.com_buildout.cfg
 # File managed by freeze command from collective.normalize_buildout
 # Changes will be overwritten
 # ETAG: None
+# ORIGIN: http://example.com/buildout.cfg
 [buildout]
 extends= external_buildouts/example.com_buildout2.cfg
 '''
@@ -129,8 +130,9 @@ extends= http://example.com/buildout.cfg
                   headers={'Etag': 'XXX'})
             freeze(cfg)
             freeze(cfg)
-            last_call = m.request_history[-1]
-            self.assertEqual('XXX', last_call._request.headers['etag'])
+            last_call = m.request_history[-2]
+            self.assertEqual('XXX',
+                             last_call._request.headers['If-None-Match'])
 
 
 class TestScript(BaseTestCase):
