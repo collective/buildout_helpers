@@ -11,7 +11,7 @@ buildout-cache/
 develop-eggs/
 parts/
 src/*
-!src/collective
+!src/buildout_helpers
 var/
 htmlcov/
 .coverage
