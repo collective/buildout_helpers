@@ -72,7 +72,9 @@ def get_all_resources(url, cache, ref_url):
         extends = config.get('buildout', 'extends').strip()
     except (NoSectionError, NoOptionError):
         extends = ''
-    for extend in extends.splitlines():
+    for extend in (item
+                   for line in extends.splitlines()
+                   for item in line.split()):
         retval.extend(get_all_resources(extend.strip(), cache, url))
     return retval
 
@@ -87,7 +89,7 @@ def freeze(args):
             freeze_resource(base_path, resource, cache, ref)
         elif was_remote(resource):
             update_resource(base_path, resource, cache, ref)
-    return "Frozen"
+    return "Frozen\n"
 
 
 def freeze_resource(base_path, resource, cache, ref, etag=None):
