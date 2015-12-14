@@ -33,6 +33,11 @@ def normalize_cmd():
                               'and return the result to stdout'))
     args = parser.parse_args()
 
+    if not len(args.configfiles):
+        logger.exception('You must choose config files to normalize ',
+                         'I won\'t guess them for you!')
+        sys.exit(3)
+
     outstreams = {}
 
     for configfile in args.configfiles:
