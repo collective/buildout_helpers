@@ -58,7 +58,7 @@ def get_version_info(url):
     for pkg_name, version_infos in version_sections.items():
         pkg_maxlen = max(len(pkg_name), pkg_maxlen)
         for version_info in version_infos:
-            version_maxlen = max(version_info.version, version_maxlen)
+            version_maxlen = max(len(version_info.version), version_maxlen)
 
     outfmt = ('{{pkg_name:{pkg_maxlen}}} = {{color}}{{version_info.version:{version_maxlen}}}{reset} {{index}} {{version_info.origin}}\n'  # NOQA
               .format(pkg_maxlen=pkg_maxlen, version_maxlen=version_maxlen,

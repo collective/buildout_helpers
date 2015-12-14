@@ -2,15 +2,16 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from collections import namedtuple
-from ConfigParser import ConfigParser
-from ConfigParser import NoOptionError
-from ConfigParser import NoSectionError
 from io import StringIO
 from io import open
 import os.path
 import requests
 from urlparse import urlparse
 
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 
 VersionInfo = namedtuple("VersionInfo", ("version", "origin"))
 
@@ -76,11 +77,11 @@ def get_all_resources(url, cache, ref_url):
     if url in cache:
         config = cache[url]
     else:
-        config = ConfigParser()
+        config = configparser.ConfigParser()
         config.readfp(get_data_stream(url))
     try:
         extends = config.get('buildout', 'extends').strip()
-    except (NoSectionError, NoOptionError):
+    except (configparser.NoSectionError, configparser.NoOptionError):
         extends = ''
     for extend in (item
                    for line in extends.splitlines()
