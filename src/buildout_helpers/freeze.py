@@ -6,7 +6,11 @@ from io import StringIO
 from io import open
 import os.path
 import requests
-from urlparse import urlparse
+
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 try:
     import ConfigParser as configparser
