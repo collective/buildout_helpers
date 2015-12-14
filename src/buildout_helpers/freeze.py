@@ -127,13 +127,18 @@ def freeze_resource(base_path, resource, cache, ref, etag=None):
     prefix = MAINTENANCE_PREFIX.format(etag, resource)
     if write:
         open(abs_target_filename, 'w').write(prefix + contents)
-    if is_remote(ref):
+    if is_remote(ref) or was_remote(ref):
         # The reference was also remote. Doesn't matter. It is guaranteed that
         # it has been frozen before
         # But in this case we must handle relative references too
         rel_resource = relativize_url(resource, ref)
-        ref, _ = frozen_filename(frozen_folder, ref)
-        new_data = open(ref).read().replace(rel_resource, rel_target_filename)
+        if is_remote(ref):
+            ref, _ = frozen_filename(frozen_folder, ref)
+        rel_target_filename = '/'.join(rel_target_filename.split('/')[1:])
+        # Prefix replacement strings with empty chars
+        # as a hack to prevent overwriting parts of absolute urls
+        new_data = open(ref).read().replace(' ' + rel_resource,
+                                            ' ' + rel_target_filename)
         open(ref, 'w').write(new_data)
     else:
         ref = ref

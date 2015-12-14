@@ -59,7 +59,7 @@ extends= external_buildouts/example.com_buildout.cfg
 # ETAG: None
 # ORIGIN: http://example.com/buildout.cfg
 [buildout]
-extends= external_buildouts/example.com_buildout2.cfg
+extends= example.com_buildout2.cfg
 '''
         with requests_mock.mock() as m:
             m.get('http://example.com/buildout.cfg', text='''[buildout]
