@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
-from collective.normalize_buildout.cmd import sort
-from collective.normalize_buildout.testing import BaseTestCase
+from buildout_helpers.normalize import sort
+from buildout_helpers.testing import BaseTestCase
 from io import open
 from io import StringIO
 
 
-class TestScript(BaseTestCase):
+class TestNormalize(BaseTestCase):
 
     def test_good_case(self):
         cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
