@@ -26,45 +26,50 @@ def normalize_cmd():
         default=False,
         help=('Do not modify buildout file, '
               'only return if file would be modified'))
-    parser.add_argument('configfile',
+    parser.add_argument('configfiles',
+                        nargs='*',
                         help=('The configfile to normalize in place, '
                               'or "-" to read the config file from stdin '
                               'and return the result to stdout'))
     args = parser.parse_args()
 
-    if args.configfile == '-':
-        instream = StringIO()
-        instream.write(sys.stdin.read())
-        instream.seek(0)
-        pipe = True
-    else:
-        instream = open(args.configfile, encoding='utf-8')
-        pipe = False
-    outstream = StringIO()
-    try:
-        sort(instream, outstream)
-    except Exception:
-        logger.exception('Could not parse file')
-        return sys.exit(1)
-    else:
-        instream.seek(0)
-        outstream.seek(0)
-        changed = instream.read() != outstream.read()
-        outstream.seek(0)
-        if not changed:
-            if pipe:
-                sys.stdout.write(outstream.read())
-            sys.exit(0)
+    outstreams = {}
+
+    for configfile in args.configfiles:
+        if len(args.configfiles) == 1 and configfile == '-':
+            instream = StringIO()
+            instream.write(sys.stdin.read())
+            instream.seek(0)
+            pipe = True
         else:
-            if args.check:
-                logger.error('File is not normalized')
-                sys.exit(1)
-            else:
+            instream = open(configfile, encoding='utf-8')
+            pipe = False
+        outstream = StringIO()
+        outstreams[configfile] = outstream
+        try:
+            sort(instream, outstream)
+        except Exception:
+            logger.exception('Could not parse file')
+            return sys.exit(3)
+        else:
+            instream.seek(0)
+            outstream.seek(0)
+            changed = instream.read() != outstream.read()
+            outstream.seek(0)
+            if not changed:
                 if pipe:
                     sys.stdout.write(outstream.read())
+                    sys.exit(0)
+            else:
+                if args.check:
+                    logger.error('File is not normalized')
+                    sys.exit(3)
                 else:
-                    open(args.configfile, 'w',
-                         encoding='utf-8').write(outstream.read())
+                    if pipe:
+                        sys.stdout.write(outstream.read())
+    if not pipe:
+        for outfile, outstream in outstreams.items():
+            open(outfile, 'w', encoding='utf-8').write(outstream.read())
 
 
 def version_info_cmd():
