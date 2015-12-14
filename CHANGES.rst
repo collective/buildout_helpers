@@ -5,7 +5,8 @@ Changelog
 1.0.0b3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Now normalize_buildouts accepts many config files in one run.
+  [do3cc]
 
 
 1.0.0b2 (2015-12-14)
