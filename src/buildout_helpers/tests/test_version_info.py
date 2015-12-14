@@ -23,13 +23,13 @@ longname = 2
 ''')
         output = get_version_info(cfg).read()
         output = output.replace(os.path.split(cfg)[0], '/wonderland/')
-        epxected = '''\
-a        = \x1b[39m2  \x1b[39m 0 /wonderland//buildout.cfg
-b        = \x1b[39m2  \x1b[39m 0 /wonderland//buildout.cfg
-longname = \x1b[39m3  \x1b[39m 0 /wonderland//buildout.cfg
-         = \x1b[39m2  \x1b[39m 1 /wonderland//more_versions.cfg
+        expected = '''\
+a        = \x1b[39m2\x1b[39m 0 /wonderland//buildout.cfg
+b        = \x1b[39m2\x1b[39m 0 /wonderland//buildout.cfg
+longname = \x1b[39m3\x1b[39m 0 /wonderland//buildout.cfg
+         = \x1b[39m2\x1b[39m 1 /wonderland//more_versions.cfg
 '''
-        self.assertEqual(epxected, output)
+        self.assertEqual(expected, output)
 
     def test_color_strange_things(self):
         cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
@@ -46,10 +46,10 @@ longname = 2
 ''')
         output = get_version_info(cfg).read()
         output = output.replace(os.path.split(cfg)[0], '/wonderland/')
-        epxected = '''\
-a        = \x1b[39m2 \x1b[39m 0 /wonderland//buildout.cfg
-b        = \x1b[39m2 \x1b[39m 0 /wonderland//buildout.cfg
-longname = \x1b[31m1 \x1b[39m 0 /wonderland//buildout.cfg
-         = \x1b[31m2 \x1b[39m 1 /wonderland//more_versions.cfg
+        expected = '''\
+a        = \x1b[39m2\x1b[39m 0 /wonderland//buildout.cfg
+b        = \x1b[39m2\x1b[39m 0 /wonderland//buildout.cfg
+longname = \x1b[31m1\x1b[39m 0 /wonderland//buildout.cfg
+         = \x1b[31m2\x1b[39m 1 /wonderland//more_versions.cfg
 '''
-        self.assertEqual(epxected, output)
+        self.assertEqual(expected, output)

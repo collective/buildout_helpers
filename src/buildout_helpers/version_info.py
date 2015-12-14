@@ -32,7 +32,8 @@ def extract_versions_section(url, ref_url=None):
     # first read own versions section
     if config.has_section('versions'):
         versions.update({pkg_name: [VersionInfo(version, url)]
-                         for pkg_name, version in config.items('versions')})
+                         for pkg_name, version in
+                         sorted(config.items('versions'))})
     try:
         extends = config.get('buildout', 'extends').strip()
     except (configparser.NoSectionError, configparser.NoOptionError):
@@ -64,7 +65,7 @@ def get_version_info(url):
               .format(pkg_maxlen=pkg_maxlen, version_maxlen=version_maxlen,
                       reset=colorama.Fore.RESET))
 
-    for pkg_name, version_infos in version_sections.items():
+    for pkg_name, version_infos in sorted(version_sections.items()):
         if (max((parse_version(version_info.version)
                  for version_info in version_infos)) !=
                 parse_version(version_infos[0].version)):
