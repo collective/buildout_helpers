@@ -3,14 +3,15 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from collections import namedtuple
 from collections import OrderedDict
-from ConfigParser import ConfigParser
-from ConfigParser import NoOptionError
-from ConfigParser import NoSectionError
 from io import StringIO
 from pkg_resources import parse_version
 import colorama
 import os.path
 import urllib2
+try:
+    import ConfigParser as configparser
+except:
+    import configparser
 
 
 VersionInfo = namedtuple("VersionInfo", ("version", "origin"))
@@ -19,7 +20,7 @@ VersionInfo = namedtuple("VersionInfo", ("version", "origin"))
 def extract_versions_section(url, ref_url=None):
     versions = OrderedDict()
 
-    config = ConfigParser()
+    config = configparser.ConfigParser()
     if ref_url:
         if not (url.startswith('/') or url.startswith('http')):
             url = '/'.join(ref_url.split('/')[:-1] + [url])
@@ -35,7 +36,7 @@ def extract_versions_section(url, ref_url=None):
                          for pkg_name, version in config.items('versions')})
     try:
         extends = config.get('buildout', 'extends').strip()
-    except (NoSectionError, NoOptionError):
+    except (configparser.NoSectionError, configparser.NoOptionError):
         return versions
     for extend in extends.splitlines():
         if extend.strip():
