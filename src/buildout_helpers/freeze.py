@@ -39,6 +39,16 @@ def absolutize_url(url, ref_url):
     return url
 
 
+def relativize_url(url, ref_url):
+    url_tokens = url.split('/')
+    ref_url_tokens = ref_url.split('/')
+    if url_tokens[:3] != ref_url_tokens[:3]:
+        return url
+    for i in range(3, min(len(url_tokens), len(ref_url_tokens))):
+        if url_tokens[i] != ref_url_tokens:
+            return '/'.join(url_tokens[i:])
+
+
 def frozen_filename(frozen_folder, url):
     components = urlparse(url)
     filename = '{components.netloc}_{path}'.format(
@@ -84,12 +94,17 @@ def freeze(args):
     cache = {}
     base_path, _ = os.path.split(url)
     resources = get_all_resources(url, cache, url)
+    frozen = 0
+    refreshed = 0
     for (resource, ref) in resources:
         if is_remote(resource):
             freeze_resource(base_path, resource, cache, ref)
+            frozen += 1
         elif was_remote(resource):
             update_resource(base_path, resource, cache, ref)
-    return "Frozen\n"
+            refreshed += 1
+    return "Froze {} resources, refreshed {} resources\n".format(frozen,
+                                                                 refreshed)
 
 
 def freeze_resource(base_path, resource, cache, ref, etag=None):
@@ -100,20 +115,28 @@ def freeze_resource(base_path, resource, cache, ref, etag=None):
         frozen_filename(frozen_folder, resource)
     if resource in cache:
         contents = cache[resource]
+        write = True
     else:
         headers = {}
         if etag:
             headers['If-None-Match'] = etag
         response = requests.get(resource, headers=headers)
+        write = response.status_code != 304
         contents = response.text
         etag = response.headers.get('etag', None)
-        contents = get_data_stream(resource).read()
     prefix = MAINTENANCE_PREFIX.format(etag, resource)
-    open(abs_target_filename, 'w').write(prefix + contents)
+    if write:
+        open(abs_target_filename, 'w').write(prefix + contents)
     if is_remote(ref):
         # The reference was also remote. Doesn't matter. It is guaranteed that
         # it has been frozen before
+        # But in this case we must handle relative references too
+        rel_resource = relativize_url(resource, ref)
         ref, _ = frozen_filename(frozen_folder, ref)
+        new_data = open(ref).read().replace(rel_resource, rel_target_filename)
+        open(ref, 'w').write(new_data)
+    else:
+        ref = ref
     new_data = open(ref).read().replace(resource, rel_target_filename)
     open(ref, 'w').write(new_data)
 
