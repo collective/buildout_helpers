@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b3 (unreleased)
+1.0.0b3 (2015-12-14)
 --------------------
 
 - Now normalize_buildouts accepts many config files in one run.
