@@ -5,7 +5,8 @@ Changelog
 1.0.0b3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Slightly better error handling for normalize_buildout.
+  [do3cc]
 
 
 1.0.0b2 (2015-12-14)
