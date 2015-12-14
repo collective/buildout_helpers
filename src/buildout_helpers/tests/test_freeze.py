@@ -77,6 +77,12 @@ extends= buildout2.cfg
         self.assertEqual(old_file_contents, expected1)
         self.assertEqual(new_file_contents, expected2)
 
+    def test_relatize_url(self):
+        from buildout_helpers.freeze import relativize_url
+        a = 'http://www.plone.org/a/b/d'
+        b = 'http://www.plone.org/a/b/c'
+        self.assertEqual('c', relativize_url(b, a))
+
     def test_freezer_caching(self):
         expected1 = '''\
 # File managed by freeze command from buildout_helpers

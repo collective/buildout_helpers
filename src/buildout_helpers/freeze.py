@@ -45,7 +45,7 @@ def relativize_url(url, ref_url):
     if url_tokens[:3] != ref_url_tokens[:3]:
         return url
     for i in range(3, min(len(url_tokens), len(ref_url_tokens))):
-        if url_tokens[i] != ref_url_tokens:
+        if url_tokens[i] != ref_url_tokens[i]:
             return '/'.join(url_tokens[i:])
 
 
