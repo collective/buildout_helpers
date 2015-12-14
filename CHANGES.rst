@@ -5,7 +5,8 @@ Changelog
 1.0.0b4 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Last release broke, I don't trust what is as 1.0.0b3 on pypi.
+  [do3cc]
 
 
 1.0.0b3 (2015-12-14)
