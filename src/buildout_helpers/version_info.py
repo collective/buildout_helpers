@@ -10,7 +10,7 @@ import os.path
 import urllib2
 try:
     import ConfigParser as configparser
-except:
+except ImportError:
     import configparser
 
 
