@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b4 (unreleased)
+1.0.0b4 (2015-12-14)
 --------------------
 
 - Last release broke, I don't trust what is as 1.0.0b3 on pypi.
