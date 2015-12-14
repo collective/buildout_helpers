@@ -2,7 +2,13 @@ Changelog
 =========
 
 
-1.0.0b2 (unreleased)
+1.0.0b3 (unreleased)
+--------------------
+
+- Nothing changed yet.
+
+
+1.0.0b2 (2015-12-14)
 --------------------
 
 - Mostly refactor freeze command. Still hard to read and needs more love.
