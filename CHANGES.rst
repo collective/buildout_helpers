@@ -2,8 +2,15 @@ Changelog
 =========
 
 
-0.3.1 (unreleased)
-------------------
+1.0.0b2 (unreleased)
+--------------------
+
+- Mostly refactor freeze command. Still hard to read and needs more love.
+  [do3cc]
+
+
+1.0.0b1 (2015-12-14)
+--------------------
 
 - Add freeze command, downloads all external buildout files, with
   headers that allow the same freeze command to update it.

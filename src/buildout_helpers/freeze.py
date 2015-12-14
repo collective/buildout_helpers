@@ -38,10 +38,14 @@ def was_remote(resource):
 
 
 def absolutize_url(url, ref_url):
-    if ref_url:
-        if not (url.startswith('/') or url.startswith('http')):
-            url = '/'.join(ref_url.split('/')[:-1] + [url])
-    return url
+    if url.startswith('http'):
+        return url
+    elif ref_url.startswith('http'):
+        start_path = ref_url.rsplit('/', 1)[0]
+        return '/'.join((start_path, url))
+    start_path = os.path.split(ref_url)[0]
+    target_path = os.path.join(start_path, url)
+    return os.path.realpath(target_path)
 
 
 def relativize_url(url, ref_url):
@@ -59,9 +63,8 @@ def frozen_filename(frozen_folder, url):
     filename = '{components.netloc}_{path}'.format(
         components=components,
         path='_'.join(components.path[1:].split('/')))
-    rel_target_filename = os.path.join('external_buildouts', filename)
     abs_target_filename = os.path.join(frozen_folder, filename)
-    return abs_target_filename, rel_target_filename
+    return abs_target_filename
 
 
 def get_data_stream(url):
@@ -76,13 +79,13 @@ def get_data_stream(url):
 
 
 def get_all_resources(url, cache, ref_url):
-    url = absolutize_url(url, ref_url)
-    retval = [(url, ref_url)]
-    if url in cache:
-        config = cache[url]
+    abs_url = absolutize_url(url, ref_url)
+    retval = [(abs_url, url, ref_url)]
+    if abs_url in cache:
+        config = cache[abs_url]
     else:
         config = configparser.ConfigParser()
-        config.readfp(get_data_stream(url))
+        config.readfp(get_data_stream(abs_url))
     try:
         extends = config.get('buildout', 'extends').strip()
     except (configparser.NoSectionError, configparser.NoOptionError):
@@ -90,7 +93,7 @@ def get_all_resources(url, cache, ref_url):
     for extend in (item
                    for line in extends.splitlines()
                    for item in line.split()):
-        retval.extend(get_all_resources(extend.strip(), cache, url))
+        retval.extend(get_all_resources(extend.strip(), cache, abs_url))
     return retval
 
 
@@ -101,57 +104,53 @@ def freeze(args):
     resources = get_all_resources(url, cache, url)
     frozen = 0
     refreshed = 0
-    for (resource, ref) in resources:
-        if is_remote(resource):
-            freeze_resource(base_path, resource, cache, ref)
+    for (abs_resource, rel_resource, ref) in resources:
+        if is_remote(abs_resource):
+            freeze_resource(base_path, abs_resource, rel_resource, cache, ref)
             frozen += 1
-        elif was_remote(resource):
-            update_resource(base_path, resource, cache, ref)
+        elif was_remote(abs_resource):
+            update_resource(base_path, abs_resource, rel_resource, cache, ref)
             refreshed += 1
     return "Froze {} resources, refreshed {} resources\n".format(frozen,
                                                                  refreshed)
 
 
-def freeze_resource(base_path, resource, cache, ref, etag=None):
+def create_replacement_url(referencing_file, new_file):
+    ref_file_abs = os.path.realpath(referencing_file)
+    ref_folder_abs = os.path.split(ref_file_abs)[0]
+    new_file_abs = os.path.realpath(new_file)
+    new_rel_path = os.path.relpath(new_file_abs, ref_folder_abs)
+    return new_rel_path
+
+
+def freeze_resource(base_path, abs_resource, rel_resource,
+                    cache, ref, etag=None):
     frozen_folder = os.path.join(base_path, 'external_buildouts')
     if not os.path.exists(frozen_folder):
         os.makedirs(frozen_folder)
-    abs_target_filename, rel_target_filename =\
-        frozen_filename(frozen_folder, resource)
-    if resource in cache:
-        contents = cache[resource]
+    abs_target_filename = frozen_filename(frozen_folder, abs_resource)
+    if abs_resource in cache:
+        contents = cache[abs_resource]
         write = True
     else:
         headers = {}
         if etag:
             headers['If-None-Match'] = etag
-        response = requests.get(resource, headers=headers)
+        response = requests.get(abs_resource, headers=headers)
         write = response.status_code != 304
         contents = response.text
         etag = response.headers.get('etag', None)
-    prefix = MAINTENANCE_PREFIX.format(etag, resource)
+    prefix = MAINTENANCE_PREFIX.format(etag, abs_resource)
     if write:
         open(abs_target_filename, 'w').write(prefix + contents)
-    if is_remote(ref) or was_remote(ref):
-        # The reference was also remote. Doesn't matter. It is guaranteed that
-        # it has been frozen before
-        # But in this case we must handle relative references too
-        rel_resource = relativize_url(resource, ref)
-        if is_remote(ref):
-            ref, _ = frozen_filename(frozen_folder, ref)
-        rel_target_filename = '/'.join(rel_target_filename.split('/')[1:])
-        # Prefix replacement strings with empty chars
-        # as a hack to prevent overwriting parts of absolute urls
-        new_data = open(ref).read().replace(' ' + rel_resource,
-                                            ' ' + rel_target_filename)
-        open(ref, 'w').write(new_data)
-    else:
-        ref = ref
-    new_data = open(ref).read().replace(resource, rel_target_filename)
+    if is_remote(ref):
+        ref = frozen_filename(frozen_folder, ref)
+    rel_target_filename = create_replacement_url(ref, abs_target_filename)
+    new_data = open(ref).read().replace(rel_resource, rel_target_filename)
     open(ref, 'w').write(new_data)
 
 
-def update_resource(base_path, resource, cache, ref):
+def update_resource(base_path, abs_resource, rel_resource, cache, ref):
     etag, url = map(lambda line: line.split(':', 1)[1].strip(),
-                    open(resource).read().splitlines()[2:4])
-    freeze_resource(base_path, url, cache, ref, etag)
+                    open(abs_resource).read().splitlines()[2:4])
+    freeze_resource(base_path, url, rel_resource, cache, ref, etag)
