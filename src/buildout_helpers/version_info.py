@@ -7,7 +7,7 @@ from io import StringIO
 from pkg_resources import parse_version
 import colorama
 import os.path
-import urllib2
+import requests
 try:
     import ConfigParser as configparser
 except ImportError:
@@ -27,9 +27,8 @@ def extract_versions_section(url, ref_url=None):
     if os.path.isfile(url):
         config.read(url)
     else:
-        print(url)
-        response = urllib2.urlopen(url)
-        config.readfp(response)
+        response = requests.get(url)
+        config.read(response.text)
     # first read own versions section
     if config.has_section('versions'):
         versions.update({pkg_name: [VersionInfo(version, url)]
@@ -38,7 +37,9 @@ def extract_versions_section(url, ref_url=None):
         extends = config.get('buildout', 'extends').strip()
     except (configparser.NoSectionError, configparser.NoOptionError):
         return versions
-    for extend in extends.splitlines():
+    for extend in (item
+                   for line in extends.splitlines()
+                   for item in line.split()):
         if extend.strip():
             for pkg, version_info in extract_versions_section(extend.strip(),
                                                               url).items():
