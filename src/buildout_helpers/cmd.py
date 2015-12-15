@@ -33,11 +33,6 @@ def normalize_cmd():
                               'and return the result to stdout'))
     args = parser.parse_args()
 
-    if not len(args.configfiles):
-        logger.exception('You must choose config files to normalize ',
-                         'I won\'t guess them for you!')
-        sys.exit(3)
-
     outstreams = {}
 
     for configfile in args.configfiles:
@@ -54,7 +49,7 @@ def normalize_cmd():
         try:
             sort(instream, outstream)
         except Exception:
-            logger.exception('Could not parse file')
+            logger.exception('Could not parse file %r', configfile)
             return sys.exit(3)
         else:
             instream.seek(0)
