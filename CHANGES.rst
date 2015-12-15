@@ -2,10 +2,24 @@ Changelog
 =========
 
 
-1.0.0b3 (unreleased)
+1.0.0b5 (unreleased)
 --------------------
 
 - Slightly better error handling for normalize_buildout.
+  [do3cc]
+
+
+1.0.0b4 (2015-12-14)
+--------------------
+
+- Last release broke, I don't trust what is as 1.0.0b3 on pypi.
+  [do3cc]
+
+
+1.0.0b3 (2015-12-14)
+--------------------
+
+- Now normalize_buildouts accepts many config files in one run.
   [do3cc]
 
 
