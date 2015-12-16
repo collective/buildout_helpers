@@ -11,6 +11,9 @@ Changelog
 - Fixed an error in version info, not handling remote urls properly.
   [do3cc]
 
+- Fixed an error in version info, extends order was backwards.
+  [do3cc]
+
 1.0.0b4 (2015-12-14)
 --------------------
 

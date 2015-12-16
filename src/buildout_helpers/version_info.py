@@ -41,9 +41,9 @@ def extract_versions_section(url, ref_url=None):
         extends = config.get('buildout', 'extends').strip()
     except (configparser.NoSectionError, configparser.NoOptionError):
         return versions
-    for extend in (item
-                   for line in extends.splitlines()
-                   for item in line.split()):
+    for extend in reversed([item
+                            for line in extends.splitlines()
+                            for item in line.split()]):
         if extend.strip():
             for pkg, version_info in extract_versions_section(extend.strip(),
                                                               url).items():
