@@ -34,7 +34,9 @@ def parse(stream):
         if state == 'OPTION/SECTION':
             if is_section.match(line):
                 new_section_name = is_section.findall(line)[0]
-                assert new_section_name not in sections
+                assert new_section_name not in sections, \
+                    'Section {} appears more than once'.format(
+                        new_section_name)
                 sections[new_section_name] = {'options': [], 'comments': []}
                 current_section = sections[new_section_name]
                 current_section['comments'] = next_comment
