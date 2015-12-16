@@ -90,7 +90,7 @@ def simple_option_handler(option, stream):
 
 def sorted_option_handler(option, stream):
     sortable = option['lines'][1:]
-    sortable.sort()
+    sortable.sort(key=lambda key: key.lower())
     for line in option['comments'] + option['lines'][0:1]:
         stream.write(line)
     for line in sortable:
@@ -113,7 +113,7 @@ def stream_sorted_options(options, stream):
         return None
     first_option = remove_option('recipe')
 
-    options.sort(key=lambda option: option['lines'][0])
+    options.sort(key=lambda option: option['lines'][0].lower())
 
     for option in [first_option] + options:
         if not option:
@@ -131,7 +131,7 @@ def buildout_section_handler(options, stream):
         return None
     first_option = remove_option('recipe')
 
-    options.sort(key=lambda option: option['lines'][0])
+    options.sort(key=lambda option: option['lines'][0].lower())
     mrdeveloper_keys = ('sources',
                         'sources-dir',
                         'auto-checkout',
@@ -158,7 +158,7 @@ def buildout_section_handler(options, stream):
 
 
 def sources_section_handler(options, stream):
-    options.sort(key=lambda x: x['lines'][0])
+    options.sort(key=lambda x: x['lines'][0].lower())
     longest_name = 0
     longest_repo_type = 0
     longest_url = 0
@@ -222,7 +222,7 @@ def stream_sorted_sections(sections, stream):
     for special_key in ['buildout', 'versions', 'BEFORE_BUILDOUT', 'sources']:
         if special_key in section_keys:
             section_keys.remove(special_key)
-    section_keys.sort()
+    section_keys.sort(key=lambda key: key.lower())
     section_keys = (['BEFORE_BUILDOUT', 'buildout'] + section_keys +
                     ['sources', 'versions'])
     section_keys = list(filter(lambda key: sections.get(key, None),
