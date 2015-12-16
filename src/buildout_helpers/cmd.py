@@ -2,9 +2,9 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from argparse import ArgumentParser
+from buildout_helpers.freeze import freeze
 from buildout_helpers.normalize import sort
 from buildout_helpers.version_info import get_version_info
-from buildout_helpers.freeze import freeze
 from io import open
 from io import StringIO
 
@@ -32,6 +32,11 @@ def normalize_cmd():
                               'or "-" to read the config file from stdin '
                               'and return the result to stdout'))
     args = parser.parse_args()
+
+    if not len(args.configfiles):
+        logger.exception('You must choose config files to normalize ',
+                         'I won\'t guess them for you!')
+        sys.exit(3)
 
     outstreams = {}
 

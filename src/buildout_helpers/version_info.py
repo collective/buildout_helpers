@@ -5,16 +5,19 @@ from collections import namedtuple
 from collections import OrderedDict
 from io import StringIO
 from pkg_resources import parse_version
+
 import colorama
 import os.path
 import requests
+
+
 try:
     import ConfigParser as configparser
 except ImportError:
     import configparser
 
 
-VersionInfo = namedtuple("VersionInfo", ("version", "origin"))
+VersionInfo = namedtuple('VersionInfo', ('version', 'origin'))
 
 
 def extract_versions_section(url, ref_url=None):
@@ -28,7 +31,7 @@ def extract_versions_section(url, ref_url=None):
         config.read(url)
     else:
         response = requests.get(url)
-        config.read(response.text)
+        config.readfp(StringIO(response.text))
     # first read own versions section
     if config.has_section('versions'):
         versions.update({pkg_name: [VersionInfo(version, url)]
