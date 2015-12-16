@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b5 (unreleased)
+1.0.0b5 (2015-12-16)
 --------------------
 
 - Slightly better error handling for normalize_buildout.
