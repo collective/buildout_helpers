@@ -28,7 +28,7 @@ def extract_versions_section(url, ref_url=None):
         config.read(url)
     else:
         response = requests.get(url)
-        config.read(response.text)
+        config.readfp(StringIO(response.text))
     # first read own versions section
     if config.has_section('versions'):
         versions.update({pkg_name: [VersionInfo(version, url)]
