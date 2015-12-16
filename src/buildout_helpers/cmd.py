@@ -2,9 +2,9 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from argparse import ArgumentParser
+from buildout_helpers.freeze import freeze
 from buildout_helpers.normalize import sort
 from buildout_helpers.version_info import get_version_info
-from buildout_helpers.freeze import freeze
 from io import open
 from io import StringIO
 

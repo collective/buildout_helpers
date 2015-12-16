@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
-import requests_mock
-from buildout_helpers.testing import BaseTestCase
 from buildout_helpers.freeze import freeze
+from buildout_helpers.testing import BaseTestCase
 from io import open
 
 import os.path
+import requests_mock
 
 
 class Config:
@@ -28,12 +28,12 @@ extends= external_buildouts/example.com_buildout.cfg
         expected2 = '''\
 # File managed by freeze command from buildout_helpers
 # Changes will be overwritten
-# ETAG: XXX
+# ETAG: example
 # ORIGIN: http://example.com/buildout.cfg
 [buildout]'''
         with requests_mock.mock() as m:
             m.get('http://example.com/buildout.cfg', text='''[buildout]''',
-                  headers={'Etag': 'XXX'})
+                  headers={'Etag': 'example'})
             freeze(Config(cfg))
 
         abs_dir, _ = os.path.split(cfg)
@@ -87,7 +87,7 @@ extends= buildout2.cfg
         expected1 = '''\
 # File managed by freeze command from buildout_helpers
 # Changes will be overwritten
-# ETAG: XXX
+# ETAG: example
 # ORIGIN: http://example.com/buildout.cfg
 [buildout]'''
         cfg = self.given_a_file_in_test_dir('buildout.cfg', '''\
@@ -96,13 +96,13 @@ extends= http://example.com/buildout.cfg
 ''')
         with requests_mock.mock() as m:
             m.get('http://example.com/buildout.cfg', text='''[buildout]''',
-                  headers={'Etag': 'XXX'})
+                  headers={'Etag': 'example'})
             freeze(Config(cfg))
             m.get('http://example.com/buildout.cfg', text='''''',
                   status_code=304)
             freeze(Config(cfg))
             last_call = m.request_history[-1]
-            self.assertEqual('XXX',
+            self.assertEqual('example',
                              last_call._request.headers['If-None-Match'])
         abs_dir, _ = os.path.split(cfg)
         new_file_contents = open(os.path.join(abs_dir,

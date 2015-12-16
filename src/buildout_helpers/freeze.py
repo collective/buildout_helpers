@@ -2,10 +2,12 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from collections import namedtuple
-from io import StringIO
 from io import open
+from io import StringIO
+
 import os.path
 import requests
+
 
 try:
     from urlparse import urlparse
@@ -17,14 +19,14 @@ try:
 except ImportError:
     import configparser
 
-VersionInfo = namedtuple("VersionInfo", ("version", "origin"))
+VersionInfo = namedtuple('VersionInfo', ('version', 'origin'))
 
 
 MAINTENANCE_PREFIX = '''\
 # File managed by freeze command from buildout_helpers
 # Changes will be overwritten
-# ETAG: {}
-# ORIGIN: {}
+# ETAG: {0}
+# ORIGIN: {1}
 '''
 
 
@@ -111,8 +113,8 @@ def freeze(args):
         elif was_remote(abs_resource):
             update_resource(base_path, abs_resource, rel_resource, cache, ref)
             refreshed += 1
-    return "Froze {} resources, refreshed {} resources\n".format(frozen,
-                                                                 refreshed)
+    return 'Froze {0} resources, refreshed {1} resources\n'.format(frozen,
+                                                                   refreshed)
 
 
 def create_replacement_url(referencing_file, new_file):
