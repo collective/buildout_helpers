@@ -2,10 +2,12 @@ Changelog
 =========
 
 
-1.0.0b6 (unreleased)
+1.1.0 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Change cmd line parameter for normalizer from -c to -C.
+  --check is unchanged and should be prefered in CI configs.
+  [do3cc]
 
 
 1.0.0b5 (2015-12-16)

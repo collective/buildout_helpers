@@ -93,7 +93,7 @@ You can do three common action swith this command.
 
 1. Check if config files are normalized (for CI)::
 
-   $ normalize_buildout -c *.cfg etc/*.cfg versions/*.cfg
+   $ normalize_buildout --check *.cfg etc/*.cfg versions/*.cfg
 
    This will either return nothing, or a warning that the buildout is not normalized. It will have a falsy return code for CI.
 
