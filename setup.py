@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Version 0.1
 """Installer for the buildout_helpers package."""
 
 from setuptools import find_packages
@@ -20,7 +19,7 @@ long_description = (
 
 setup(
     name='buildout_helpers',
-    version='1.0.0b6.dev0',
+    version='1.1.0.dev0',
     description="A buildout config file normalizer",
     long_description=long_description,
     # Get more from http://pypi.python.org/pypi?%3Aaction=list_classifiers

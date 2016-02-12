@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def normalize_cmd():
     parser = ArgumentParser()
     parser.add_argument(
-        '-c',
+        '-C',
         '--check',
         dest='check',
         action='store_true',
