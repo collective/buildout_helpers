@@ -5,6 +5,9 @@ Changelog
 1.1.0 (unreleased)
 --------------------
 
+- This package is working well in production. No more betas.
+  [do3cc]
+
 - Change cmd line parameter for normalizer from -c to -C.
   --check is unchanged and should be prefered in CI configs.
   [do3cc]
