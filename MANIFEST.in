@@ -1,7 +1,10 @@
+exclude *.cfg
 exclude .*
+exclude package.json
 exclude requirements.txt
-graft docs
 graft src/buildout_helpers
-include *.cfg *.rst *.in
+include *.rst
+prune docs
+prune external_buildouts
 recursive-exclude src *.pyc
 recursive-exclude src .*un~
