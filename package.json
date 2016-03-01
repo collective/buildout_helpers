@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "cz-conventional-changelog": "1.1.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "name": "buildout_helpers",
+  "description": "Introduction ============",
+  "version": "1.0.0",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/collective/buildout_helpers.git"
+  },
+  "author": "Patrick Gerken",
+  "license": "BSD"
+}
