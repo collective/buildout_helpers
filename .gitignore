@@ -19,3 +19,5 @@ htmlcov/
 output.xml
 *.swp
 eggs
+.npm
+node_modules
