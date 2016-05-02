@@ -5,7 +5,8 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Bugfix whif source repo fs
+  [do3cc]
 
 
 1.0.0 (2016-03-01)
