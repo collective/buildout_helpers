@@ -2,10 +2,17 @@ Changelog
 =========
 
 
-1.0.1 (unreleased)
+1.0.2 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+1.0.1 (2016-05-02)
+------------------
+
+- Bugfix whif source repo fs
+  [do3cc]
 
 
 1.0.0 (2016-03-01)

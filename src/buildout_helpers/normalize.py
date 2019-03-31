@@ -166,10 +166,11 @@ def sources_section_handler(options, stream):
     all_args = set()
     for option in options:
         name, rest = [x.strip() for x in option['lines'][0].split('=', 1)]
+        rest = [x.strip() for x in rest.split(' ') if x]
         try:
-            repo_type, url, rest = [x.strip() for x in rest.split(' ', 2)]
+            repo_type, url, rest = rest
         except ValueError:
-            repo_type, url = [x.strip() for x in rest.split(' ', 1)]
+            repo_type, url = rest
             rest = ''
         args = dict((arg.split('=') for arg in
                      [x.strip() for x in rest.split(' ')] if arg))

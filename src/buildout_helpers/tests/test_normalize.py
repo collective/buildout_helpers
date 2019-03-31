@@ -150,3 +150,24 @@ extra-field-types =
 '''  # NOQA
 
         self.assertEqual(expected, output.read())
+
+    def test_regression4(self):
+        cfg = self.given_a_file_in_test_dir('buildout.cfg', '''
+[sources]
+# xxx
+# yyy
+a = fs  http...
+b = git http...''')
+        output = StringIO()
+
+        sort(open(cfg), output)
+        output.seek(0)
+
+        expected = '''[sources]
+# xxx
+# yyy
+a = fs  http...
+b = git http...
+'''
+
+        self.assertEqual(expected, output.read())
