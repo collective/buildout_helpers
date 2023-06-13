@@ -34,8 +34,8 @@ def normalize_cmd():
     args = parser.parse_args()
 
     if not len(args.configfiles):
-        logger.exception('You must choose config files to normalize ',
-                         'I won\'t guess them for you!')
+        logger.error('You must choose config files to normalize '
+                     'I will not guess them for you!')
         sys.exit(3)
 
     outstreams = {}
