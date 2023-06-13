@@ -8,6 +8,19 @@ buildout_helpers
 Do you work with many buildouts? Are you suffering from keeping them all up to date to best practices? Is the output of buildout annotate not enough for you? Are you having trouble to keep your buildouts repoducible?
 This package provide helpers that help you for each of these problems and maybe more!
 
+
+Maintenance
+-----------
+
+This was written when Plone 4.3 was current and only Python 2.7 was available at that time.
+Now there is Plone 5 which can use Python 3 and even Plone 6 that doesn't use zc.buildout at all.
+
+I (Patrick Gerken) am not using this Tool at the moment, but I know projects that still use it.
+Therefor I will make this project runnable again with typical Plone 4 versions.
+
+When there is interest to use this with Plone 5, I am more than happy to help to get this lifted to Python 3 and Plone 5.
+
+
 Features
 --------
 
