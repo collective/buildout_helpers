@@ -2,6 +2,12 @@
    If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide_addons.html
    This text does not appear on pypi or github. It is a comment.
 
+Warning
+=======
+
+The repositories depends on outdated packages with open security vulnerabilities.
+To my knowledge, there are no current users of this code, so I Archive the package for now.
+
 buildout_helpers
 =============================
 
